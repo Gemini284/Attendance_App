@@ -3,9 +3,9 @@ package com.example.attendanceapp
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
-class StudentLogin : AppCompatActivity() {
+class courseList : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_studen_login)
+        setContentView(R.layout.activity_course_list)
     }
 }
