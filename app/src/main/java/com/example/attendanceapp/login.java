@@ -58,19 +58,26 @@ public class login extends AppCompatActivity {
                             if (snapshot.hasChild(uidTxt)){ //checks uid
 
                                 final String getPassword = snapshot.child(uidTxt).child("password").getValue(String.class);
+                                final boolean isTeacher = snapshot.child(uidTxt).child("isTeacher").getValue(Boolean.class);
 
                                 if (getPassword.equals(passTxt)){
-                                    //HERE CHECK ISTEACHER
-                                    Toast.makeText(login.this,"Sucessful",Toast.LENGTH_SHORT).show();
+                                    if(isTeacher == true){
+                                        Toast.makeText(login.this, "Sucess!, Going to teacher dashboard",Toast.LENGTH_SHORT).show();
+                                        startActivity(new Intent(login.this, teacher_Dashboard.class));
+                                        finish();
+                                    }else{
+                                        Toast.makeText(login.this,"Sucessful Student dashboard",Toast.LENGTH_SHORT).show();
 
-                                    startActivity(new Intent(login.this, student_dashboard.class));
-                                    finish();
+                                        startActivity(new Intent(login.this, student_dashboard.class));
+                                        finish();
+                                    }
+
                                 }
                                 else {
                                     Toast.makeText(login.this, "Incorrect Password",Toast.LENGTH_SHORT).show();
                                 }
                             }else{
-                                Toast.makeText(login.this, "Incorrect Password",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(login.this, "User not found",Toast.LENGTH_SHORT).show();
                             }
                         }
 

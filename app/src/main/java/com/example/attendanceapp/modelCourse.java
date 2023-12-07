@@ -2,49 +2,34 @@ package com.example.attendanceapp;
 
 public class modelCourse {
 
-    public modelCourse(String coursename, String place, String teacherName, String startHour, String endHour, String code) {
-        Coursename = coursename;
-        this.place = place;
-        this.teacherName = teacherName;
-        this.startHour = startHour;
-        this.endHour = endHour;
-        this.code = code;
+    modelCourse(){
+
     }
 
-    String Coursename;
-    String place;
-    String teacherName;
+    String Name, Place, Code, endHour, startHour;
 
-    public String getCoursename() {
-        return Coursename;
+    public String getName() {
+        return Name;
     }
 
-    public void setCoursename(String coursename) {
-        Coursename = coursename;
+    public void setName(String name) {
+        Name = name;
     }
 
     public String getPlace() {
-        return place;
+        return Place;
     }
 
     public void setPlace(String place) {
-        this.place = place;
+        Place = place;
     }
 
-    public String getTeacherName() {
-        return teacherName;
+    public String getCode() {
+        return Code;
     }
 
-    public void setTeacherName(String teacherName) {
-        this.teacherName = teacherName;
-    }
-
-    public String getStartHour() {
-        return startHour;
-    }
-
-    public void setStartHour(String startHour) {
-        this.startHour = startHour;
+    public void setCode(String code) {
+        Code = code;
     }
 
     public String getEndHour() {
@@ -55,16 +40,11 @@ public class modelCourse {
         this.endHour = endHour;
     }
 
-    public String getCode() {
-        return code;
+    public String getStartHour() {
+        return startHour;
     }
 
-    public void setCode(String code) {
-        this.code = code;
+    public void setStartHour(String startHour) {
+        this.startHour = startHour;
     }
-
-    String startHour;
-    String endHour;
-    String code;
-
 }
