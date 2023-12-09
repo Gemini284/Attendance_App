@@ -15,6 +15,18 @@
         android:theme="@style/Theme.AttendanceApp"
         tools:targetApi="31">
         <activity
+            android:name=".classes"
+            android:exported="false" />
+        <activity
+            android:name=".statistic"
+            android:exported="false" />
+        <activity
+            android:name=".calendar"
+            android:exported="false" />
+        <activity
+            android:name=".settings"
+            android:exported="false" />
+        <activity
             android:name=".teacher_Dashboard"
             android:exported="false" />
         <activity

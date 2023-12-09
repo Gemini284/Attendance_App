@@ -71,7 +71,7 @@ public class Register extends AppCompatActivity {
                     dataReference.child("users").addListenerForSingleValueEvent(new ValueEventListener() {
                         @Override
                         public void onDataChange(@NonNull DataSnapshot snapshot) {
-                            if (snapshot.hasChild(userId)){
+                            if (snapshot.hasChild(userId)){ //register with the userId
                                 Toast.makeText(Register.this, "Already exists", Toast.LENGTH_SHORT).show();
                             }
                             else {
