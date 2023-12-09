@@ -8,6 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -31,74 +33,71 @@ import com.google.firebase.database.ValueEventListener;
 public class student_dashboard extends AppCompatActivity {
     DrawerLayout drawerLayout;
     ImageView menu;
-    LinearLayout home,settings, calendar,logout,analytics,classes;
+    LinearLayout home, settings, calendar, logout, analytics, classes;
     private FirebaseUser user;
     RecyclerView recyclerView;
     rvAdapter mainAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_student_dashboard);
 
-        //Probably error here
         drawerLayout = findViewById(R.id.drawerLayout);
+        TextView userName = findViewById(R.id.name_st);
+        TextView idNumber = findViewById(R.id.idnumber);
+        menu = findViewById(R.id.menu);
+        home = findViewById(R.id.home);
+        settings = findViewById(R.id.settings);
+        calendar = findViewById(R.id.calendar);
+        logout = findViewById(R.id.logout);
+        analytics = findViewById(R.id.statistics);
+        classes = findViewById(R.id.classes);
 
-
-       TextView userName = findViewById(R.id.name_st);
-       TextView idNumber = findViewById(R.id.idnumber);
-       menu = findViewById(R.id.menu);
-       home = findViewById(R.id.home);
-       settings = findViewById(R.id.settings);
-       calendar = findViewById(R.id.calendar);
-       logout = findViewById(R.id.logout);
-       analytics = findViewById(R.id.statistics);
-       classes = findViewById(R.id.classes);
-
-       menu.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               openDrawer(drawerLayout);
-           }
-       });
-       home.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               recreate();
-           }
-       });
-       settings.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               redirectActivity(student_dashboard.this,settings.class);
-           }
-       });
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openDrawer(drawerLayout);
+            }
+        });
+        home.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                recreate();
+            }
+        });
+        settings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                redirectActivity(student_dashboard.this, settings.class);
+            }
+        });
         calendar.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                redirectActivity(student_dashboard.this,calendar.class);
+                redirectActivity(student_dashboard.this, calendar.class);
             }
         });
         classes.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                redirectActivity(student_dashboard.this,classes.class);
+                redirectActivity(student_dashboard.this, classes.class);
             }
         });
         analytics.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                redirectActivity(student_dashboard.this,statistic.class);
+                redirectActivity(student_dashboard.this, statistic.class);
             }
         });
         logout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(student_dashboard.this, "Logout", Toast.LENGTH_SHORT).show();
+                showLogoutConfirmationDialog();
             }
         });
 
-
-       recyclerView = (RecyclerView)findViewById(R.id.rv);
+        recyclerView = (RecyclerView) findViewById(R.id.rv);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         FirebaseRecyclerOptions<modelCourse> options =
                 new FirebaseRecyclerOptions.Builder<modelCourse>()
@@ -107,6 +106,34 @@ public class student_dashboard extends AppCompatActivity {
 
         mainAdapter = new rvAdapter(options);
         recyclerView.setAdapter(mainAdapter);
+    }
+
+    private void showLogoutConfirmationDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Logout");
+        builder.setMessage("Are you sure you want to logout?");
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                logoutUser();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void logoutUser() {
+        FirebaseAuth.getInstance().signOut();
+        redirectActivity(student_dashboard.this, login.class);
     }
 
     @Override
