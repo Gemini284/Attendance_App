@@ -27,8 +27,8 @@
         android:textColor="@color/white"
         android:textSize="20dp"
         app:helperText="Required"
-        app:layout_constraintBottom_toTopOf="@+id/loingEmail"
-        app:layout_constraintStart_toStartOf="@+id/loingEmail"
+        app:layout_constraintBottom_toTopOf="@+id/loginUid"
+        app:layout_constraintStart_toStartOf="@+id/loginUid"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -41,10 +41,10 @@
         android:textSize="20dp"
         app:layout_constraintBottom_toTopOf="@+id/password"
         app:layout_constraintStart_toStartOf="@+id/password"
-        app:layout_constraintTop_toBottomOf="@+id/loingEmail" />
+        app:layout_constraintTop_toBottomOf="@+id/loginUid" />
 
     <EditText
-        android:id="@+id/loingEmail"
+        android:id="@+id/loginUid"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="46dp"

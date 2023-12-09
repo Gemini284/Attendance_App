@@ -43,8 +43,6 @@ public class student_dashboard extends AppCompatActivity {
         //Probably error here
         drawerLayout = findViewById(R.id.drawerLayout);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
 
        TextView userName = findViewById(R.id.name_st);
        TextView idNumber = findViewById(R.id.idnumber);
