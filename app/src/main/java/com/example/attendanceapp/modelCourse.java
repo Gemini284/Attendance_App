@@ -2,11 +2,29 @@ package com.example.attendanceapp;
 
 public class modelCourse {
 
-    modelCourse(){
-
+    modelCourse() {
+        // Default constructor
     }
 
-    String Name, Place, Code, endHour, startHour;
+    private String Name, Place, Code, endHour, startHour;
+    private User teacher;
+    private User student;
+
+    public User getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(User teacher) {
+        this.teacher = teacher;
+    }
+
+    public User getStudent() {
+        return student;
+    }
+
+    public void setStudent(User student) {
+        this.student = student;
+    }
 
     public String getName() {
         return Name;
@@ -46,5 +64,13 @@ public class modelCourse {
 
     public void setStartHour(String startHour) {
         this.startHour = startHour;
+    }
+
+    public static class User {
+        private String userId;
+
+        public String getUserId() {
+            return userId;
+        }
     }
 }

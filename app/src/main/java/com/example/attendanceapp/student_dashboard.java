@@ -28,7 +28,10 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
+
+import java.util.Calendar;
 
 public class student_dashboard extends AppCompatActivity {
     DrawerLayout drawerLayout;
@@ -37,6 +40,8 @@ public class student_dashboard extends AppCompatActivity {
     private FirebaseUser user;
     RecyclerView recyclerView;
     rvAdapter mainAdapter;
+    private String userId; // Declare userId variable
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +58,8 @@ public class student_dashboard extends AppCompatActivity {
         logout = findViewById(R.id.logout);
         analytics = findViewById(R.id.statistics);
         classes = findViewById(R.id.classes);
+        userId = getIntent().getStringExtra("userId");
+
 
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -97,15 +104,66 @@ public class student_dashboard extends AppCompatActivity {
             }
         });
 
-        recyclerView = (RecyclerView) findViewById(R.id.rv);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        recyclerView = findViewById(R.id.rv);
+        recyclerView.setLayoutManager(new WrapContentLinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+
+        String currentDay = getCurrentDayOfWeek();
+        // Display the current day using a Toast (you can comment this line if not needed)
+        Toast.makeText(this, "Current Day: " + currentDay, Toast.LENGTH_SHORT).show();
+
+        // Use the correct node name (case-sensitive) in your database query
+        DatabaseReference coursesRef = FirebaseDatabase.getInstance().getReference().child("courses").child(currentDay);
+
+        // Create a query to fetch the specific user's courses
+        Query teacherQuery = coursesRef.orderByChild("STUDENT/userId").equalTo(userId);
+
         FirebaseRecyclerOptions<modelCourse> options =
                 new FirebaseRecyclerOptions.Builder<modelCourse>()
-                        .setQuery(FirebaseDatabase.getInstance().getReference().child("Courses"), modelCourse.class)
+                        .setQuery(teacherQuery, modelCourse.class)
                         .build();
 
         mainAdapter = new rvAdapter(options);
         recyclerView.setAdapter(mainAdapter);
+
+        // CHECK HERE IT KEEPS CRASHING
+        //checkIfNoItems();
+
+
+        // Add a listener to check if there are no items in the RecyclerView
+        /*mainAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+            @Override
+            public void onItemRangeInserted(int positionStart, int itemCount) {
+                super.onItemRangeInserted(positionStart, itemCount);
+                // Check if items are inserted
+                checkIfNoItems();
+            }
+
+            @Override
+            public void onItemRangeRemoved(int positionStart, int itemCount) {
+                super.onItemRangeRemoved(positionStart, itemCount);
+                // Check if items are removed
+                checkIfNoItems();
+            }
+        });*/
+
+
+    /*private void checkIfNoItems() {
+        if (mainAdapter.getItemCount() == 0) {
+            // If no items, show a message
+            Toast.makeText(this, "No courses to display", Toast.LENGTH_SHORT).show();
+        }*/
+    }
+    private String getCurrentDayOfWeek() {
+        Calendar calendar = Calendar.getInstance();
+
+        // Get the current day of the week as an integer (1 = Sunday, 2 = Monday, ..., 7 = Saturday)
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+
+        // Convert the integer day of the week to a string representation
+        String[] daysOfWeek = {"", "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
+        String currentDayOfWeek = daysOfWeek[dayOfWeek];
+
+        return currentDayOfWeek;
     }
 
     private void showLogoutConfirmationDialog() {
@@ -136,16 +194,22 @@ public class student_dashboard extends AppCompatActivity {
         redirectActivity(student_dashboard.this, login.class);
     }
 
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mainAdapter.stopListening();
+    }
     @Override
     protected void onStart() {
         super.onStart();
         mainAdapter.startListening();
     }
-
     @Override
-    protected void onStop() {
-        mainAdapter.stopListening();
-        super.onStop();
+    protected void onPause() {
+        super.onPause();
+       //gotta fix here with: https://stackoverflow.com/questions/41501177/recyclerview-disappears-after-back-to-activity
+        closeDrawer(drawerLayout);
     }
 
     public static void openDrawer(DrawerLayout drawerLayout){
@@ -163,9 +227,4 @@ public class student_dashboard extends AppCompatActivity {
         activity.finish();
     }
 
-    @Override
-    protected void onPause() {
-        super.onPause();
-        closeDrawer(drawerLayout);
-    }
 }

@@ -72,10 +72,12 @@ public class login extends AppCompatActivity {
                 if (snapshot.hasChild(uidTxt)) { // checks uid
                     final String getPassword = snapshot.child(uidTxt).child("password").getValue(String.class);
                     isTeacher = snapshot.child(uidTxt).child("isTeacher").getValue(Boolean.class);
+                    String userId = snapshot.child(uidTxt).child("userId").getValue(String.class);
 
                     if (getPassword.equals(password)) {
                         Toast.makeText(login.this, "Login successful", Toast.LENGTH_SHORT).show();
-                        navigateDashboard();
+
+                        navigateDashboard(userId);
                     } else {
                         Toast.makeText(login.this, "Incorrect Password", Toast.LENGTH_SHORT).show();
                     }
@@ -89,17 +91,26 @@ public class login extends AppCompatActivity {
                 // Handle database error if needed
             }
         });
-    }//hola
-
-    private void navigateDashboard() {
-        // Navigate to the dashboard based on your custom logic
-        if (isTeacher) {
-            startActivity(new Intent(login.this, teacher_Dashboard.class));
-            } else {
-                startActivity(new Intent(login.this, student_dashboard.class));
-            }
-
-            finish();
-        }
     }
+
+    private void navigateDashboard(String userId) {
+        // Navigate to the dashboard based on your custom logic
+        Intent intent;
+
+        if (isTeacher) {
+            intent = new Intent(login.this, teacher_Dashboard.class);
+        } else {
+            intent = new Intent(login.this, student_dashboard.class);
+        }
+
+        // Pass the userId to the next activity
+        intent.putExtra("userId", userId);
+
+        // Start the next activity
+        startActivity(intent);
+
+        // Finish the current activity
+        finish();
+    }
+}
 
