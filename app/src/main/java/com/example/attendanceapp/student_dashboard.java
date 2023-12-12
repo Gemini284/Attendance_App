@@ -122,7 +122,7 @@ public class student_dashboard extends AppCompatActivity {
                         .setQuery(teacherQuery, modelCourse.class)
                         .build();
 
-        mainAdapter = new rvAdapter(options);
+        mainAdapter = new rvAdapter(options, false);
         recyclerView.setAdapter(mainAdapter);
 
         // CHECK HERE IT KEEPS CRASHING

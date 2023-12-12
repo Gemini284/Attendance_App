@@ -6,7 +6,22 @@ public class modelCourse {
         // Default constructor
     }
 
-    private String Name, Place, Code, endHour, startHour;
+    private String Name;
+
+    private String Place;
+    private String Code;
+    private String endHour;
+    private String startHour;
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    private String status;
     private User teacher;
     private User student;
 

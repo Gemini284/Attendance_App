@@ -103,8 +103,11 @@ public class login extends AppCompatActivity {
             intent = new Intent(login.this, student_dashboard.class);
         }
 
-        // Pass the userId to the next activity
+        // Pass the userId to the next activity and isTeacher for the rvAdapter
         intent.putExtra("userId", userId);
+        intent.putExtra("isTeacher", isTeacher);
+
+
 
         // Start the next activity
         startActivity(intent);
