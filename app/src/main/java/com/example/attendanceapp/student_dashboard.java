@@ -42,7 +42,6 @@ public class student_dashboard extends AppCompatActivity {
     rvAdapter mainAdapter;
     private String userId; // Declare userId variable
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,7 +58,6 @@ public class student_dashboard extends AppCompatActivity {
         analytics = findViewById(R.id.statistics);
         classes = findViewById(R.id.classes);
         userId = getIntent().getStringExtra("userId");
-
 
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -111,10 +109,8 @@ public class student_dashboard extends AppCompatActivity {
         // Display the current day using a Toast (you can comment this line if not needed)
         Toast.makeText(this, "Current Day: " + currentDay, Toast.LENGTH_SHORT).show();
 
-        // Use the correct node name (case-sensitive) in your database query
         DatabaseReference coursesRef = FirebaseDatabase.getInstance().getReference().child("courses").child(currentDay);
 
-        // Create a query to fetch the specific user's courses
         Query teacherQuery = coursesRef.orderByChild("STUDENT/userId").equalTo(userId);
 
         FirebaseRecyclerOptions<modelCourse> options =
@@ -125,45 +121,41 @@ public class student_dashboard extends AppCompatActivity {
         mainAdapter = new rvAdapter(options, false);
         recyclerView.setAdapter(mainAdapter);
 
-        // CHECK HERE IT KEEPS CRASHING
-        //checkIfNoItems();
-
-
-        // Add a listener to check if there are no items in the RecyclerView
-        /*mainAdapter.registerAdapterDataObserver(new RecyclerView.AdapterDataObserver() {
+        mainAdapter.setOnItemClickListener(new rvAdapter.OnItemClickListener() {
             @Override
-            public void onItemRangeInserted(int positionStart, int itemCount) {
-                super.onItemRangeInserted(positionStart, itemCount);
-                // Check if items are inserted
-                checkIfNoItems();
+            public void onItemClick(modelCourse model) {
+                if ("Open".equals(model.getStatus())) {
+                    showSignInDialog(model);
+                } else {
+                    // Handle logic for other statuses (e.g., show a message)
+                }
             }
-
-            @Override
-            public void onItemRangeRemoved(int positionStart, int itemCount) {
-                super.onItemRangeRemoved(positionStart, itemCount);
-                // Check if items are removed
-                checkIfNoItems();
-            }
-        });*/
-
-
-    /*private void checkIfNoItems() {
-        if (mainAdapter.getItemCount() == 0) {
-            // If no items, show a message
-            Toast.makeText(this, "No courses to display", Toast.LENGTH_SHORT).show();
-        }*/
+        });
     }
-    private String getCurrentDayOfWeek() {
-        Calendar calendar = Calendar.getInstance();
 
-        // Get the current day of the week as an integer (1 = Sunday, 2 = Monday, ..., 7 = Saturday)
-        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+    private void showSignInDialog(modelCourse model) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle("Sign In");
+        builder.setMessage("Do you want to sign in to this class?");
 
-        // Convert the integer day of the week to a string representation
-        String[] daysOfWeek = {"", "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
-        String currentDayOfWeek = daysOfWeek[dayOfWeek];
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                // Handle the sign-in action
+                dialogInterface.dismiss();
+            }
+        });
 
-        return currentDayOfWeek;
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
+
+        AlertDialog signInDialog = builder.create();
+        signInDialog.setCancelable(true);
+        signInDialog.show();
     }
 
     private void showLogoutConfirmationDialog() {
@@ -194,37 +186,44 @@ public class student_dashboard extends AppCompatActivity {
         redirectActivity(student_dashboard.this, login.class);
     }
 
-
     @Override
     protected void onStop() {
         super.onStop();
         mainAdapter.stopListening();
     }
+
     @Override
     protected void onStart() {
         super.onStart();
         mainAdapter.startListening();
     }
+
     @Override
     protected void onPause() {
         super.onPause();
-       //gotta fix here with: https://stackoverflow.com/questions/41501177/recyclerview-disappears-after-back-to-activity
         closeDrawer(drawerLayout);
     }
 
     public static void openDrawer(DrawerLayout drawerLayout){
         drawerLayout.openDrawer(GravityCompat.START);
     }
+
     public static void closeDrawer(DrawerLayout drawerLayout){
         if (drawerLayout.isDrawerOpen(GravityCompat.START)){
             drawerLayout.closeDrawer(GravityCompat.START);
         }
     }
+
     public static void redirectActivity(Activity activity, Class secondActivity){
         Intent intent = new Intent(activity,secondActivity);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(intent);
         activity.finish();
     }
-
+    private String getCurrentDayOfWeek() {
+        Calendar calendar = Calendar.getInstance();
+        int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
+        String[] daysOfWeek = {"", "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY"};
+        return daysOfWeek[dayOfWeek];
+    }
 }

@@ -25,17 +25,17 @@ import java.util.Calendar;
 
 public class rvAdapter extends FirebaseRecyclerAdapter<modelCourse, rvAdapter.myViewHolder> {
 
-    private boolean isTeacher;
+        private boolean isTeacher;
+        private OnItemClickListener onItemClickListener;
 
-    public rvAdapter(@NonNull FirebaseRecyclerOptions<modelCourse> options, boolean isTeacher) {
-        super(options);
-        this.isTeacher = isTeacher;
-    }
-    private OnItemClickListener onItemClickListener;
+        public rvAdapter(@NonNull FirebaseRecyclerOptions<modelCourse> options, boolean isTeacher) {
+            super(options);
+            this.isTeacher = isTeacher;
+        }
 
-    public interface OnItemClickListener {
-        void onItemClick(modelCourse model);
-    }
+        public interface OnItemClickListener {
+            void onItemClick(modelCourse model);
+        }
 
     public void setOnItemClickListener(OnItemClickListener listener) {
         this.onItemClickListener = listener;
@@ -142,8 +142,8 @@ public class rvAdapter extends FirebaseRecyclerAdapter<modelCourse, rvAdapter.my
         alertDialog.show();
     }
 
-    private void showSignInDialog(myViewHolder holder, modelCourse model) {
 
+    private void showSignInDialog(myViewHolder holder, modelCourse model) {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(holder.itemView.getContext());
         builder.setTitle("Sign In");
